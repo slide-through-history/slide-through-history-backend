@@ -27,23 +27,14 @@ app.use(
     methods: ["GET", "POST", "PUT", "HEAD", "PATCH", "DELETE"],
   })
 );
+
 // Middleware Setup
 app.use(helmet());
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 require("./configs/db.config.js");
-
-app.use(session({
-  secret: "basic-auth-secret",
-  cookie: { maxAge: 60 * 1000 }, // 60 seconds
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection,
-    resave: true,
-    saveUninitialized: false,
-    ttl: 24 * 60 * 60 // 1 day
-  })
-}));
+require("./configs/session.config")(app);
 
 
 // Route setup
