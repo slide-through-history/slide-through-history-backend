@@ -7,7 +7,22 @@ const mongoose = require("mongoose");
 const saltRounds = 10;
 const User = require("../models/User.model");
 
-const routeGuard = require("../configs/route-guard.config");
+
+// Protected Route Middleware -----> Not sure if I need this.
+
+router.use((req, res, next) => {
+  if (req.session.currentUser) { // <== if there's user in the session (user is logged in)
+    next(); // ==> go to the next route ---
+  } else {                          //    |
+    res.redirect("/login");         //    |
+  }                                 //    |
+}); // ------------------------------------                                
+//     | 
+//     V
+router.get("/secret", (req, res, next) => {
+  res.render("secret");
+});
+
 
 // .post() route ==> to process form data
 router.post("/signup", (req, res, next) => {
