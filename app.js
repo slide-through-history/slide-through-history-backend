@@ -14,6 +14,7 @@ const app = express();
 const session    = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 
+// const router       = require('router')
 
 
 // CORS setup
@@ -38,8 +39,8 @@ require("./configs/session.config")(app);
 
 
 // Route setup
-app.use("/", require("./routes/index.js"));
+// app.use("/", require("./routes/index.js"));
 app.use("/auth", require("./routes/auth.js"));
-app.use("/app", require("./routes/application.js"));
+// app.use("/app", require("./routes/application.js"));
 
 module.exports = app;

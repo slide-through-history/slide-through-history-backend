@@ -7,23 +7,6 @@ const mongoose = require("mongoose");
 const saltRounds = 10;
 const User = require("../models/User.model");
 
-
-// Protected Route Middleware -----> Not sure if I need this.
-
-router.use((req, res, next) => {
-  if (req.session.currentUser) { // <== if there's user in the session (user is logged in)
-    next(); // ==> go to the next route ---
-  } else {                          //    |
-    res.redirect("/login");         //    |
-  }                                 //    |
-}); // ------------------------------------                                
-//     | 
-//     V
-router.get("/secret", (req, res, next) => {
-  res.render("secret");
-});
-
-
 // .post() route ==> to process form data
 router.post("/signup", (req, res, next) => {
   const { email, password } = req.body;
@@ -31,7 +14,7 @@ router.post("/signup", (req, res, next) => {
   if (!email || !password) {
     res.status(401).json({
       message:
-        "All fields are mandatory. Please provide your username, email and password.",
+        "All fields are mandatory. Please provide your email and password.",
     });
     return;
   }
@@ -79,28 +62,6 @@ router.post("/signup", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// router.post("/login", (req, res, next) => {
-//   passport.authenticate("local", (err, user, failureDetails) => {
-//     if (err) {
-//       res
-//         .status(500)
-//         .json({ message: "Something went wrong with database query." });
-//     }
-
-//     if (!user) {
-//       res.status(401).json(failureDetails);
-//     }
-
-//     req.login(user, (err) => {
-//       if (err)
-//         return res
-//           .status(500)
-//           .json({ message: "Something went wrong with login!" });
-//       user.passwordHash = undefined;
-//       res.status(200).json({ message: "Login successful!", user });
-//     });
-//   })(req, res, next);
-// });
 
 router.post("/login", (req, res, next) => {
   if (email === "" || password === "") {
@@ -120,7 +81,7 @@ router.post("/login", (req, res, next) => {
       }
       if (bcrypt.compareSync(passwordHash, user.password)) {
         // Save the login in the session!
-        req.session.currentUser = user;
+        // req.session.currentUser = user;
         res.redirect("/");
       } else {
         res.render("auth/login", {
@@ -133,12 +94,12 @@ router.post("/login", (req, res, next) => {
   })
 });
 
-router.get("/logout", (req, res, next) => {
-  req.session.destroy((err) => {
-    // cannot access session here
-    res.redirect("/login");
-  });
-});
+// router.get("/logout", (req, res, next) => {
+//   req.session.destroy((err) => {
+//     // cannot access session here
+//     res.redirect("/login");
+//   });
+// });
 
 
 // router.post("/logout", routeGuard, (req, res, next) => {
