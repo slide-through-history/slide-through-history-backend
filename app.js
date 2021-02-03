@@ -11,6 +11,12 @@ const debug = require("debug")(
   `${app_name}:${path.basename(__filename).split(".")[0]}`
 );
 const app = express();
+const session    = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+
+// const router       = require('router')
+
+
 // CORS setup
 app.use(
   cors({
@@ -22,16 +28,19 @@ app.use(
     methods: ["GET", "POST", "PUT", "HEAD", "PATCH", "DELETE"],
   })
 );
+
 // Middleware Setup
 app.use(helmet());
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 require("./configs/db.config.js");
+require("./configs/session.config")(app);
+
 
 // Route setup
-app.use("/", require("./routes/index.js"));
+// app.use("/", require("./routes/index.js"));
 app.use("/auth", require("./routes/auth.js"));
-app.use("/app", require("./routes/application.js"));
+// app.use("/app", require("./routes/application.js"));
 
 module.exports = app;
