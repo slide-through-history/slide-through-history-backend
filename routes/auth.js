@@ -22,8 +22,7 @@ router.post("/signup", (req, res, next) => {
   const regex = /^\S+@\S+\.\S+$/;
   if (!regex.test(email)) {
     res.status(500).json({
-      message:
-      "Please use a valid email address.",
+      message: "Please use a valid email address.",
     });
     return;
   }
@@ -62,36 +61,36 @@ router.post("/signup", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-
 router.post("/login", (req, res, next) => {
+  const { email, password } = req.body;
   if (email === "" || password === "") {
     res.render("auth/login", {
-      errorMessage: "Please enter both, username and password to sign up."
+      errorMessage: "Please enter both, username and password to sign up.",
     });
     return;
   }
 
   User.findOne({ email })
-  .then(user => {
+    .then((user) => {
       if (!user) {
         res.render("auth/login", {
-          errorMessage: "The email doesn't exist."
+          errorMessage: "The email doesn't exist.",
         });
         return;
       }
-      if (bcrypt.compareSync(passwordHash, user.password)) {
+      if (bcryptjs.compareSync(password, user.passwordHash)) {
         // Save the login in the session!
         // req.session.currentUser = user;
         res.redirect("/");
       } else {
-        res.render("auth/login", {
-          errorMessage: "Incorrect password"
+        res.status(401).json({
+          errorMessage: "Incorrect password",
         });
       }
-  })
-  .catch(error => {
-    next(error);
-  })
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
 // router.get("/logout", (req, res, next) => {
@@ -100,7 +99,6 @@ router.post("/login", (req, res, next) => {
 //     res.redirect("/login");
 //   });
 // });
-
 
 // router.post("/logout", routeGuard, (req, res, next) => {
 //   req.logout();
