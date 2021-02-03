@@ -11,11 +11,6 @@ const debug = require("debug")(
   `${app_name}:${path.basename(__filename).split(".")[0]}`
 );
 const app = express();
-const session    = require("express-session");
-const MongoStore = require("connect-mongo")(session);
-
-// const router       = require('router')
-
 
 // CORS setup
 app.use(
@@ -23,7 +18,7 @@ app.use(
     credentials: true,
     preflightContinue: true,
     optionsSuccessStatus: 200,
-    origin: process.env.REACT_APP_CLIENT_POINT,
+    origin: process.env.REACT_APP_FRONTEND_ENDPOINT,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "HEAD", "PATCH", "DELETE"],
   })
@@ -36,7 +31,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 require("./configs/db.config.js");
 require("./configs/session.config")(app);
-
 
 // Route setup
 // app.use("/", require("./routes/index.js"));
